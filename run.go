@@ -231,6 +231,14 @@ func IsRunnableInBackground() bool {
 	return ui.IsRunnableInBackground()
 }
 
+func SetWindowDecorated(decorated bool) {
+	ui.SetWindowDecorated(decorated)
+}
+
+func IsWindowDecorated() bool {
+	return ui.IsWindowDecorated()
+}
+
 // SetRunnableInBackground sets the state if the game runs even in background.
 //
 // If the given value is true, the game runs in background e.g. when losing focus.

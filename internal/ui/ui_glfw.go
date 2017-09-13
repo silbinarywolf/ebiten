@@ -45,16 +45,18 @@ type userInterface struct {
 	origPosY             int
 	initFullscreen       bool
 	initCursorVisible    bool
+	initWindowDecorated  bool
 	runnableInBackground bool
 	m                    sync.Mutex
 }
 
 var (
 	currentUI = &userInterface{
-		sizeChanged:       true,
-		origPosX:          -1,
-		origPosY:          -1,
-		initCursorVisible: true,
+		sizeChanged:         true,
+		origPosX:            -1,
+		origPosY:            -1,
+		initCursorVisible:   true,
+		initWindowDecorated: true,
 	}
 	currentUIInitialized = make(chan struct{})
 )
@@ -72,6 +74,12 @@ func initialize() error {
 	glfw.WindowHint(glfw.ContextVersionMajor, 2)
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
 
+	decorated := glfw.False
+	if currentUI.isInitWindowDecorated() {
+		decorated = glfw.True
+	}
+	glfw.WindowHint(glfw.Decorated, decorated)
+
 	// As start, create an window with temporary size to create OpenGL context thread.
 	window, err := glfw.CreateWindow(16, 16, "", nil, nil)
 	if err != nil {
@@ -88,6 +96,7 @@ func initialize() error {
 		mode = glfw.CursorHidden
 	}
 	currentUI.window.SetInputMode(glfw.CursorMode, mode)
+
 	currentUI.window.SetInputMode(glfw.StickyMouseButtonsMode, glfw.True)
 	currentUI.window.SetInputMode(glfw.StickyKeysMode, glfw.True)
 	return nil
@@ -153,6 +162,19 @@ func (u *userInterface) isInitCursorVisible() bool {
 func (u *userInterface) setInitCursorVisible(visible bool) {
 	u.m.Lock()
 	u.initCursorVisible = visible
+	u.m.Unlock()
+}
+
+func (u *userInterface) isInitWindowDecorated() bool {
+	u.m.Lock()
+	v := u.initWindowDecorated
+	u.m.Unlock()
+	return v
+}
+
+func (u *userInterface) setInitWindowDecorated(decorated bool) {
+	u.m.Lock()
+	u.initWindowDecorated = decorated
 	u.m.Unlock()
 }
 
@@ -318,6 +340,35 @@ func SetCursorVisibility(visible bool) {
 			c = glfw.CursorHidden
 		}
 		currentUI.window.SetInputMode(glfw.CursorMode, c)
+		return nil
+	})
+}
+
+func IsWindowDecorated() bool {
+	u := currentUI
+	if !u.isRunning() {
+		return u.isInitWindowDecorated()
+	}
+	v := false
+	_ = currentUI.runOnMainThread(func() error {
+		v = currentUI.window.GetAttrib(glfw.Decorated) == glfw.True
+		return nil
+	})
+	return v
+}
+
+func SetWindowDecorated(decorated bool) {
+	u := currentUI
+	if !u.isRunning() {
+		u.setInitWindowDecorated(decorated)
+		return
+	}
+	_ = currentUI.runOnMainThread(func() error {
+		v := glfw.False
+		if decorated {
+			v = glfw.True
+		}
+		currentUI.window.SetAttrib(glfw.Decorated, v)
 		return nil
 	})
 }

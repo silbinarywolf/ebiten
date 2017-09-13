@@ -44,6 +44,7 @@ var (
 		ebiten.KeyF:     0,
 		ebiten.KeyB:     0,
 		ebiten.KeyC:     0,
+		ebiten.KeyD:     0,
 	}
 	count = 0
 )
@@ -62,6 +63,7 @@ func update(screen *ebiten.Image) error {
 	fullscreen := ebiten.IsFullscreen()
 	runnableInBackground := ebiten.IsRunnableInBackground()
 	cursorVisible := ebiten.IsCursorVisible()
+	decorated := ebiten.IsWindowDecorated()
 
 	if keyStates[ebiten.KeyUp] == 1 {
 		screenHeight += d
@@ -100,11 +102,15 @@ func update(screen *ebiten.Image) error {
 	if keyStates[ebiten.KeyC] == 1 {
 		cursorVisible = !cursorVisible
 	}
+	if keyStates[ebiten.KeyD] == 1 {
+		decorated = !decorated
+	}
 	ebiten.SetScreenSize(screenWidth, screenHeight)
 	ebiten.SetScreenScale(screenScale)
 	ebiten.SetFullscreen(fullscreen)
 	ebiten.SetRunnableInBackground(runnableInBackground)
 	ebiten.SetCursorVisibility(cursorVisible)
+	ebiten.SetWindowDecorated(decorated)
 
 	count++
 
@@ -128,6 +134,7 @@ Press S key to change the window scale
 Press F key to switch the fullscreen state
 Press B key to switch the run-in-background state
 Press C key to switch the cursor visibility
+Press D key to switch the window decoration (frame)
 Cursor: (%d, %d)
 FPS: %0.2f`, x, y, ebiten.CurrentFPS())
 	ebitenutil.DebugPrint(screen, msg)
