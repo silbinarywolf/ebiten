@@ -231,8 +231,7 @@ func CreateWindow(width, height int, title string, monitor *Monitor, share *Wind
 	return theWindows.add(w), nil
 }
 
-func GetJoystickAxes(joy Joystick) []float32 {
-	return glfw.GetJoystickAxes(glfw.Joystick(joy))
+
 }
 
 func GetJoystickButtons(joy Joystick) []byte {
