@@ -92,13 +92,13 @@ func IsMouseButtonPressed(mouseButton MouseButton) bool {
 	return uiDriver().Input().IsMouseButtonPressed(driver.MouseButton(mouseButton))
 }
 
-// GamepadGUID returns a string with the uuid.
+// GamepadSDLID returns a string with the uuid.
 //
-// GamepadGUID is concurrent-safe.
+// GamepadSDLID is concurrent-safe.
 //
-// GamepadGUID always returns an empty string on browsers and mobiles.
-func GamepadGUID(id int) string {
-	return uiDriver().Input().GamepadGUID(id)
+// GamepadSDLID always returns an empty string on browsers and mobiles.
+func GamepadSDLID(id int) string {
+	return uiDriver().Input().GamepadSDLID(id)
 }
 
 // GamepadName returns a string with the name.

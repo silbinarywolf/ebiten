@@ -56,7 +56,7 @@ func (i *Input) CursorPosition() (x, y int) {
 	return i.ui.adjustPosition(i.cursorX, i.cursorY)
 }
 
-func (i *Input) GamepadGUID(id int) string {
+func (i *Input) GamepadSDLID(id int) string {
 	return ""
 }
 

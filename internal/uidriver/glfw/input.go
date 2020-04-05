@@ -78,7 +78,7 @@ func (i *Input) GamepadIDs() []int {
 	return r
 }
 
-func (i *Input) GamepadGUID(id int) string {
+func (i *Input) GamepadSDLID(id int) string {
 	i.ui.m.RLock()
 	defer i.ui.m.RUnlock()
 	if len(i.gamepads) <= id {
